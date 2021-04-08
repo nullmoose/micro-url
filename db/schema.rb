@@ -10,9 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 0) do
+ActiveRecord::Schema.define(version: 2021_04_08_000633) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "links", force: :cascade do |t|
+    t.text "original_url"
+    t.string "short_slug"
+    t.string "admin_slug"
+    t.integer "click_counter", default: 0
+    t.boolean "expired", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["admin_slug"], name: "index_links_on_admin_slug"
+    t.index ["short_slug"], name: "index_links_on_short_slug"
+  end
 
 end
