@@ -1,5 +1,7 @@
 class Link < ApplicationRecord
-  validates :original_url, presence: true, format: URI::regexp(%w[http https])
+  validates :original_url, presence: true,
+                           format: URI::regexp(%w[http https]),
+                           length: { maximum: 32779 }
   validates :short_slug, presence: true
   validates :admin_slug, presence: true
 

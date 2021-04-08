@@ -9,6 +9,11 @@ RSpec.describe Link do
     expect(Link.new(original_url: "not a url")).to_not be_valid
   end
 
+  it "should require original_url be less than 32780 characters long" do
+    long_url = "https://www.#{'a' * 32780}.com"
+    expect(Link.new(original_url: long_url)).to_not be_valid
+  end
+
   describe "before_validation" do
     it "should generate an admin slug on create" do
       expect(Link.create(original_url: "https://www.test.com").admin_slug).to_not be_nil
