@@ -25,6 +25,7 @@ class LinksController < ApplicationController
 
   def expire
     @link.update(expired: true)
+    flash[:notice] = "Link has been expired"
     redirect_to root_path
   end
 

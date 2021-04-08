@@ -136,6 +136,11 @@ RSpec.describe LinksController do
       expect(response).to redirect_to(root_path)
     end
 
+    it "notifies the user that the link has been expired" do
+      put :expire, params: { admin_slug: link.admin_slug }
+      expect(flash[:notice]).to be_present
+    end
+
     it "raises a not found error when link does not exist" do
       expect {
         get :expire, params: { admin_slug: "bad_slug" }
