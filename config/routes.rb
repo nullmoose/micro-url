@@ -3,5 +3,6 @@ Rails.application.routes.draw do
 
   resources :links, only: [:create]
 
-  get '/a/:admin_slug', to: 'links#admin', as: :admin
+  get   '/a/:admin_slug',        to: 'links#admin',  as: :admin
+  patch '/a/:admin_slug/expire', to: 'links#expire', as: :expire
 end

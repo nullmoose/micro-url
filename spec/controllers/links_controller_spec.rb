@@ -57,26 +57,61 @@ RSpec.describe LinksController do
 
   describe "GET admin" do
     let(:link) { Link.create(original_url: "https://www.test.com") }
+
     it "assigns @link by admin_slug" do
-      get "admin", params: { admin_slug: link.admin_slug }
+      get :admin, params: { admin_slug: link.admin_slug }
       expect(assigns(:link)).to eq(link)
     end
 
     it "renders the admin view" do
-      get "admin", params: { admin_slug: link.admin_slug }
+      get :admin, params: { admin_slug: link.admin_slug }
       expect(response).to render_template(:admin)
     end
 
     it "raises a not found error when link does not exist" do
       expect {
-        get "admin", params: { admin_slug: "bad_slug" }
+        get :admin, params: { admin_slug: "bad_slug" }
       }.to raise_error(ActionController::RoutingError)
     end
 
     it "raises a not found error for expired links" do
       link.update(expired: true)
       expect {
-        get "admin", params: { admin_slug: link.admin_slug }
+        get :admin, params: { admin_slug: link.admin_slug }
+      }.to raise_error(ActionController::RoutingError)
+    end
+  end
+
+  describe "PUT expire" do
+    let(:link) { Link.create(original_url: "https://www.test.com") }
+
+    it "assigns @link by admin_slug" do
+      put :expire, params: { admin_slug: link.admin_slug }
+      expect(assigns(:link)).to eq(link)
+    end
+
+    it "expires the link" do
+      expect {
+        put :expire, params: { admin_slug: link.admin_slug }
+        link.reload
+      }.to change { link.expired }.from(false).to(true)
+    end
+
+    it "redirects to the new action" do
+      put :expire, params: { admin_slug: link.admin_slug }
+      expect(response).to redirect_to(root_path)
+    end
+
+    it "raises a not found error when link does not exist" do
+      expect {
+        get :expire, params: { admin_slug: "bad_slug" }
+      }.to raise_error(ActionController::RoutingError)
+    end
+
+    it "raises a not found error for expired links" do
+      link.update(expired: true)
+      expect {
+        get :expire, params: { admin_slug: link.admin_slug }
       }.to raise_error(ActionController::RoutingError)
     end
   end
