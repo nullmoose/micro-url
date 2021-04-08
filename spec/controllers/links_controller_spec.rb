@@ -1,6 +1,40 @@
 require 'rails_helper'
 
 RSpec.describe LinksController do
+  let(:link) { Link.create(original_url: "https://www.test.com") }
+
+  describe "GET show" do
+    it "assigns @link by short_slug" do
+      get :show, params: { short_slug: link.short_slug }
+      expect(assigns(:link)).to eq(link)
+    end
+
+    it "redirects to the original_url" do
+      get :show, params: { short_slug: link.short_slug }
+      expect(response).to redirect_to(link.original_url)
+    end
+
+    it "increments the click_counter for the link" do
+      expect {
+        get :show, params: { short_slug: link.short_slug }
+        link.reload
+      }.to change { link.click_counter }.by(1)
+    end
+
+    it "raises a not found error when link does not exist" do
+      expect {
+        get :show, params: { short_slug: "bad_slug" }
+      }.to raise_error(ActionController::RoutingError)
+    end
+
+    it "raises a not found error for expired links" do
+      link.update(expired: true)
+      expect {
+        get :show, params: { short_slug: link.short_slug }
+      }.to raise_error(ActionController::RoutingError)
+    end
+  end
+
   describe "GET new" do
     it "assigns @link" do
       get :new

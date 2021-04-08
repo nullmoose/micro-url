@@ -1,5 +1,10 @@
 class LinksController < ApplicationController
-  before_action :assign_link, only: [:admin, :expire]
+  before_action :assign_link, only: [:admin, :expire, :show]
+
+  def show
+    @link.increment!(:click_counter)
+    redirect_to @link.original_url
+  end
 
   def new
     @link = Link.new
@@ -30,6 +35,7 @@ class LinksController < ApplicationController
   end
 
   def assign_link
-    @link = Link.unexpired.find_by(admin_slug: params[:admin_slug]) or not_found
+    slug = params[:short_slug] || params[:admin_slug]
+    @link = Link.unexpired.find_by("short_slug = ? OR admin_slug = ?", slug, slug) or not_found
   end
 end
