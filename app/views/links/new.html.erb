@@ -1,1 +1,4 @@
-hello
+<%= form_for @link, url: { action: "create" } do |f| %>
+  <%= f.text_field :original_url %>
+  <%= f.submit "Shorten Link!" %>
+<% end %>
