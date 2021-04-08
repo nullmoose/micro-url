@@ -1,0 +1,3 @@
+.link-as-text::after {
+  content: attr(href);
+}

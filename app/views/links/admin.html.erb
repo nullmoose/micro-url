@@ -1,1 +1,10 @@
-created
+<h3>Admin Link</h3>
+<a class='link-as-text' href='<%= admin_url(action: :admin, controller: :links, admin_slug: @link.admin_slug, only_path: false) %>'></a>
+<p>(Save this link to return to this page)</p>
+<h3>Micro Link</h3>
+<a class='link-as-text' target='_blank' href='<%= short_url(action: :show, controller: :links, short_slug: @link.short_slug, only_path: false) %>'></a>
+<p>(Use this link to share with your friends)</p>
+<p>Click Count: <%= @link.click_counter %></p>
+<%= form_for @link, url: { action: "expire" } do |f| %>
+  <%= f.submit "Expire Link" %>
+<% end %>
