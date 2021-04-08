@@ -67,9 +67,16 @@ RSpec.describe LinksController do
       expect(response).to render_template(:admin)
     end
 
-    it "raises a not found error when link is not found" do
+    it "raises a not found error when link does not exist" do
       expect {
         get "admin", params: { admin_slug: "bad_slug" }
+      }.to raise_error(ActionController::RoutingError)
+    end
+
+    it "raises a not found error for expired links" do
+      link.update(expired: true)
+      expect {
+        get "admin", params: { admin_slug: link.admin_slug }
       }.to raise_error(ActionController::RoutingError)
     end
   end

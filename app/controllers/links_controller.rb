@@ -14,7 +14,7 @@ class LinksController < ApplicationController
   end
 
   def admin
-    @link = Link.find_by(admin_slug: params[:admin_slug]) or not_found
+    @link = Link.unexpired.find_by(admin_slug: params[:admin_slug]) or not_found
   end
 
   private

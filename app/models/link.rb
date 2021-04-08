@@ -5,6 +5,8 @@ class Link < ApplicationRecord
 
   before_validation :generate_slugs, on: :create
 
+  scope :unexpired, -> { where(expired: false) }
+
   private
 
   def generate_slugs
