@@ -54,4 +54,23 @@ RSpec.describe LinksController do
       end
     end
   end
+
+  describe "GET admin" do
+    let(:link) { Link.create(original_url: "https://www.test.com") }
+    it "assigns @link by admin_slug" do
+      get "admin", params: { admin_slug: link.admin_slug }
+      expect(assigns(:link)).to eq(link)
+    end
+
+    it "renders the admin view" do
+      get "admin", params: { admin_slug: link.admin_slug }
+      expect(response).to render_template(:admin)
+    end
+
+    it "raises a not found error when link is not found" do
+      expect {
+        get "admin", params: { admin_slug: "bad_slug" }
+      }.to raise_error(ActionController::RoutingError)
+    end
+  end
 end
